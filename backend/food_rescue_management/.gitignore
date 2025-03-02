@@ -1,0 +1,4 @@
+authentication/__pycache__/
+authentication/migrations/__pycache__/
+food_rescue_management/__pycache__/
+db.sqlite3
