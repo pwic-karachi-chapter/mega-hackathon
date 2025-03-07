@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -139,7 +139,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 from datetime import timedelta
 SIMPLE_JWT = {
@@ -149,3 +149,11 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+AUTH_USER_MODEL = 'authentication.CustomUser'
+
+EMAIL_HOST = config('EMAIL_HOST')  
+EMAIL_PORT = config('EMAIL_PORT', cast=int)  
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool) 
+EMAIL_HOST_USER = config('EMAIL_HOST_USER') 
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')

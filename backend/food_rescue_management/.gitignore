@@ -1,4 +1,6 @@
 authentication/__pycache__/
 authentication/migrations/__pycache__/
+authentication/migrations
 food_rescue_management/__pycache__/
 db.sqlite3
+.env

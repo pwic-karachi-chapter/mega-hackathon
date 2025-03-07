@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import generics, status
@@ -7,14 +8,29 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer, ChangePasswordSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 from django.core.mail import send_mail
+from .serializers import RegisterSerializer, LoginSerializer, ChangePasswordSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer, RefreshTokenSerializer
+
+CustomUser = get_user_model() 
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    permission_classes = [AllowAny]
+    queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        
+        return Response(
+            {"message": "User registered successfully", "user_id": user.id},
+            status=status.HTTP_201_CREATED
+        )
+
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -26,15 +42,20 @@ class LoginView(APIView):
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
 
-        user = User.objects.filter(username=username).first()
+        user = CustomUser.objects.filter(username=username).first()
         if user and user.check_password(password):
             refresh = RefreshToken.for_user(user)
+            role = user.userprofile.role 
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
+                'role': role,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'username': user.username,
+                'email': user.email
             })
-        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
+        return Response({"error": "Invalid credentials"}, status=401)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -65,7 +86,6 @@ class ChangePasswordView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class PasswordResetView(APIView):
     permission_classes = [AllowAny]
 
@@ -74,17 +94,16 @@ class PasswordResetView(APIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
 
-        user = User.objects.filter(email=email).first()
+        user = CustomUser.objects.filter(email=email).first()
         if user:
             token = default_token_generator.make_token(user)
-            uidb64 = urlsafe_base64_encode(user.pk.to_bytes(4, 'big'))
-            reset_link = f"http://yourfrontend.com/reset-password/{uidb64}/{token}"
-            
-            # Send email (configure email settings in settings.py)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))             
+            reset_link = f"http://localhost:8080/reset-password/{uidb64}/{token}"
+
             send_mail(
                 "Password Reset Request",
                 f"Click the link to reset your password: {reset_link}",
-                "no-reply@yourdomain.com",
+                "sawera.rehman01@gmail.com",
                 [email],
                 fail_silently=False,
             )
@@ -103,8 +122,8 @@ class PasswordResetConfirmView(APIView):
 
         try:
             uid = force_str(urlsafe_base64_decode(serializer.validated_data['uidb64']))
-            user = User.objects.get(pk=int(uid))
-        except (User.DoesNotExist, ValueError, TypeError):
+            user = CustomUser.objects.get(pk=int(uid))
+        except (CustomUser.DoesNotExist, ValueError, TypeError):
             return Response({"error": "Invalid token or user ID."}, status=status.HTTP_400_BAD_REQUEST)
 
         if not default_token_generator.check_token(user, serializer.validated_data['token']):
@@ -113,3 +132,18 @@ class PasswordResetConfirmView(APIView):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
+
+class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RefreshTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            refresh_token = serializer.validated_data['refresh']
+            token = RefreshToken(refresh_token)
+            access_token = str(token.access_token)
+            return Response({"access": access_token}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": "Invalid or expired refresh token."}, status=status.HTTP_400_BAD_REQUEST)
