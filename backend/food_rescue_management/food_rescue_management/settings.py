@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'food',
 ]
 
 MIDDLEWARE = [

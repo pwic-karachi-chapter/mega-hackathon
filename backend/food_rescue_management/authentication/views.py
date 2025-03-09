@@ -47,6 +47,7 @@ class LoginView(APIView):
             refresh = RefreshToken.for_user(user)
             role = user.userprofile.role 
             return Response({
+                'id': user.id,
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'role': role,
