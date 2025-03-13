@@ -1,14 +1,16 @@
-from rest_framework import status, generics
+from rest_framework import status, generics, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, NotFound
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from .models import Food, Donation
 from authentication.models import CustomUser
-from .serializers import FoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer
+from .serializers import FoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
 
 class AddFoodView(APIView):
     permission_classes = [IsAuthenticated] 
@@ -132,3 +134,90 @@ class DeleteFoodAPIView(generics.DestroyAPIView):
         food = self.get_object()
         food.delete()
         return Response({"message": "Food deleted successfully"}, status=status.HTTP_200_OK)
+
+class AdminFoodListAPIView(generics.ListAPIView):
+    serializer_class = AdminFoodListingSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'request_status': ['exact'],
+        'donor__username': ['exact', 'contains'],  
+        'created_at': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'expiration_date': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'foodType': ['exact'],
+    }
+    ordering_fields = ['created_at', 'expiration_date']
+    pagination_class = PageNumberPagination
+    
+    def get_queryset(self):
+        queryset = Food.objects.all()
+        
+        # Get filter parameters from query string
+        request_status = self.request.query_params.get('request_status')
+        food_type = self.request.query_params.get('food_type')
+        username = self.request.query_params.get('username')
+        role = self.request.query_params.get('role')
+        
+        # Apply filters if parameters are provided
+        if request_status:
+            queryset = queryset.filter(request_status=request_status)
+        
+        if username:
+            queryset = queryset.filter(donor__username=username)
+            
+        if role:
+            queryset = queryset.filter(donor__userprofile__role=role)
+
+        if food_type:
+            queryset = queryset.filter(foodType=food_type)
+        
+        return queryset
+
+class AdminDonationListAPIView(generics.ListAPIView):
+    serializer_class = AdminDonationListingSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    
+    filterset_fields = {
+        'is_claimed': ['exact'],  
+        'claimed_at': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'charity__username': ['exact', 'contains'],  
+        'food__name': ['exact', 'contains'],  
+        'food__donor__username': ['exact', 'contains'],  
+        'food__foodType': ['exact']  # ✅ Corrected field name
+    }
+    
+    search_fields = [
+        'charity__username',
+        'food__name',
+        'food__donor__username', 
+    ]
+
+    ordering_fields = ['claimed_at']
+    pagination_class = PageNumberPagination
+    
+    def get_queryset(self):
+        queryset = Donation.objects.all()
+        
+        is_claimed = self.request.query_params.get('is_claimed')
+        charity_username = self.request.query_params.get('charity_username')
+        donor_username = self.request.query_params.get('donor_username')
+        food_name = self.request.query_params.get('food_name')
+        food_type = self.request.query_params.get('food_type')
+
+        if is_claimed is not None:
+            queryset = queryset.filter(is_claimed=is_claimed)
+
+        if charity_username:
+            queryset = queryset.filter(charity__username=charity_username)
+        
+        if donor_username:
+            queryset = queryset.filter(food__donor__username=donor_username)
+        
+        if food_name:
+            queryset = queryset.filter(food__name__icontains=food_name)
+
+        if food_type:
+            queryset = queryset.filter(food__foodType__icontains=food_type)  # ✅ Corrected field reference
+
+        return queryset

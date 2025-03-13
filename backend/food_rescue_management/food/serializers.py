@@ -114,3 +114,24 @@ class UnclaimedFoodListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
         fields = ['id', 'name', 'foodType', 'quantity', 'unit', 'city', 'country', 'latitude', 'longitude', 'expiration_date', 'request_status']
+
+
+class AdminFoodListingSerializer(serializers.ModelSerializer):
+    donor_name = serializers.CharField(source='donor.username', read_only=True)
+    donor_role = serializers.CharField(source='donor.userprofile.role', read_only=True)
+
+    class Meta:
+        model = Food
+        fields = ['id', 'name', 'foodType', 'quantity', 'unit', 'expiration_date', 
+                 'city', 'country', 'longitude', 'latitude', 'created_at', 
+                 'request_status', 'donor', 'donor_name', 'donor_role']
+
+class AdminDonationListingSerializer(serializers.ModelSerializer):
+    charity_name = serializers.CharField(source='charity.username', read_only=True)
+    food_name = serializers.CharField(source='food.name', read_only=True)
+    food_type = serializers.CharField(source='food.foodType', read_only=True)
+    donor_name = serializers.CharField(source='food.donor.username', read_only=True)
+
+    class Meta:
+        model = Donation
+        fields = ['id', 'food_name', 'food_type', 'charity_name', 'donor_name', 'is_claimed', 'claimed_at']

@@ -21,7 +21,7 @@ class Food(models.Model):
         ('litre', 'Litre'),
         ('dozen', 'Dozen'),
     ]
-    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'role': 'donor'})
+    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='food')
     name = models.CharField(max_length=255)
     foodType = models.CharField(max_length=10, choices=FOOD_TYPE_CHOICES)
     quantity = models.IntegerField()
@@ -40,7 +40,7 @@ class Food(models.Model):
 
 class Donation(models.Model):
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    charity = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'role': 'charity'})
+    charity = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='donation')
     claimed_at = models.DateTimeField(auto_now_add=True)
     is_claimed = models.BooleanField(default=False)
     
