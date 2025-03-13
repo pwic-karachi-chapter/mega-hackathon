@@ -9,20 +9,22 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from .models import Food, Donation
+from rest_framework.parsers import MultiPartParser, FormParser
 from authentication.models import CustomUser
-from .serializers import FoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
+from .serializers import AddFoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
 
 class AddFoodView(APIView):
     permission_classes = [IsAuthenticated] 
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         if request.user.userprofile.role != 'donor':
             return Response({"error": "Only donors can add food."}, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data.copy()
-        data["donor"] = request.user.id 
+        data["donor"] = request.user.id  
 
-        serializer = FoodSerializer(data=data, context={"request": request})
+        serializer = AddFoodSerializer(data=data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -100,7 +102,7 @@ class UnclaimedFoodListAPIView(generics.ListAPIView):
 
 class EditFoodAPIView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = FoodSerializer
+    serializer_class = AddFoodSerializer
     queryset = Food.objects.all()
 
     def get_object(self):
@@ -184,7 +186,7 @@ class AdminDonationListAPIView(generics.ListAPIView):
         'charity__username': ['exact', 'contains'],  
         'food__name': ['exact', 'contains'],  
         'food__donor__username': ['exact', 'contains'],  
-        'food__foodType': ['exact']  # ✅ Corrected field name
+        'food__foodType': ['exact']
     }
     
     search_fields = [

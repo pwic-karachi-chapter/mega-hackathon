@@ -2,12 +2,12 @@ from rest_framework import serializers
 from food.models import Food, Donation
 from authentication.models import CustomUser
 
-class FoodSerializer(serializers.ModelSerializer):
+class AddFoodSerializer(serializers.ModelSerializer):
     donor = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Food
-        fields = ['id', 'donor', 'name', 'foodType', 'quantity', 'unit', 'city', 'country', 'latitude', 'longitude', 'expiration_date', 'request_status']
+        fields = ['id', 'donor', 'name', 'foodType', 'quantity', 'unit', 'city', 'country', 'latitude', 'longitude', 'expiration_date', 'request_status', 'image']
 
     def create(self, validated_data):
         donor_username = validated_data.pop('donor')
@@ -47,6 +47,7 @@ class FoodListingSerializer(serializers.ModelSerializer):
             "longitude",
             "expiration_date",
             "request_status",
+            "image",
             "claimed",
             "claimedBy",
             "claimedAt",
@@ -92,7 +93,7 @@ class ClaimedFoodSerializer(serializers.ModelSerializer):
     expirationDate = serializers.DateField(source="food.expiration_date")
     claimedAt = serializers.DateTimeField(source="claimed_at")
     status = serializers.CharField(source="food.request_status")
-
+    image = serializers.ImageField(source="food.image")
     class Meta:
         model = Donation
         fields = [
@@ -107,13 +108,14 @@ class ClaimedFoodSerializer(serializers.ModelSerializer):
             "longitude",
             "expirationDate",
             "status",
-            "claimedAt"
+            "claimedAt", 
+            "image"
         ]
         
 class UnclaimedFoodListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
-        fields = ['id', 'name', 'foodType', 'quantity', 'unit', 'city', 'country', 'latitude', 'longitude', 'expiration_date', 'request_status']
+        fields = ['id', 'name', 'foodType', 'quantity', 'unit', 'city', 'country', 'latitude', 'longitude', 'expiration_date', 'request_status', 'image']
 
 
 class AdminFoodListingSerializer(serializers.ModelSerializer):
@@ -124,14 +126,14 @@ class AdminFoodListingSerializer(serializers.ModelSerializer):
         model = Food
         fields = ['id', 'name', 'foodType', 'quantity', 'unit', 'expiration_date', 
                  'city', 'country', 'longitude', 'latitude', 'created_at', 
-                 'request_status', 'donor', 'donor_name', 'donor_role']
+                 'request_status', 'image', 'donor', 'donor_name', 'donor_role']
 
 class AdminDonationListingSerializer(serializers.ModelSerializer):
     charity_name = serializers.CharField(source='charity.username', read_only=True)
     food_name = serializers.CharField(source='food.name', read_only=True)
     food_type = serializers.CharField(source='food.foodType', read_only=True)
     donor_name = serializers.CharField(source='food.donor.username', read_only=True)
-
+    image = serializers.ImageField(source='food.image', read_only=True)
     class Meta:
         model = Donation
-        fields = ['id', 'food_name', 'food_type', 'charity_name', 'donor_name', 'is_claimed', 'claimed_at']
+        fields = ['id', 'food_name', 'food_type', 'charity_name', 'donor_name', 'image', 'is_claimed', 'claimed_at']

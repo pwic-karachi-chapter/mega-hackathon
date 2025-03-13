@@ -13,6 +13,11 @@ class Food(models.Model):
         ('fruit', 'Fruit'),
         ('meat', 'Meat'),
         ('bakery', 'Bakery'),
+        ('vegetable', 'Vegetable'),
+        ('dairy', 'Dairy'),
+        ('meal', 'Meal'),
+        ('snack', 'Snack'),
+        ('liquid', 'Liquid'),
     ]
     
     UNIT_CHOICES = [
@@ -33,6 +38,7 @@ class Food(models.Model):
     latitude = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     request_status = models.CharField(max_length=20, choices=REQUEST_STATUS_CHOICES, default='pending')
+    image = models.ImageField(upload_to='food_images/', null=True, blank=True)  # Add this line
 
     def __str__(self): 
         return f"{self.name} ({self.quantity} units)"
