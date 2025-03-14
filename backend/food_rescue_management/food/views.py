@@ -1,26 +1,30 @@
-from rest_framework import status, generics
+from rest_framework import status, generics, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, NotFound
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from .models import Food, Donation
+from rest_framework.parsers import MultiPartParser, FormParser
 from authentication.models import CustomUser
-from .serializers import FoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer
+from .serializers import AddFoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
 
 class AddFoodView(APIView):
     permission_classes = [IsAuthenticated] 
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         if request.user.userprofile.role != 'donor':
             return Response({"error": "Only donors can add food."}, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data.copy()
-        data["donor"] = request.user.id 
+        data["donor"] = request.user.id  
 
-        serializer = FoodSerializer(data=data, context={"request": request})
+        serializer = AddFoodSerializer(data=data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -58,9 +62,17 @@ class ClaimFoodAPIView(APIView):
     def post(self, request, food_id):
         food = get_object_or_404(Food, id=food_id, request_status='accepted')
 
-        serializer = FoodClaimSerializer(data={"food": food.id}, context={"request": request})
+        data = {
+            "food": food.id,
+            "longitude": request.data.get("longitude"),
+            "latitude": request.data.get("latitude"),
+            "city": request.data.get("city"),
+            "country": request.data.get("country"),
+        }
+
+        serializer = FoodClaimSerializer(data=data, context={"request": request})
         if serializer.is_valid():
-            donation = serializer.save()
+            donation = serializer.save(charity=request.user) 
             return Response({'message': 'Food claimed successfully', 'donation': FoodClaimSerializer(donation).data}, status=201)
 
         return Response(serializer.errors, status=400)
@@ -98,7 +110,7 @@ class UnclaimedFoodListAPIView(generics.ListAPIView):
 
 class EditFoodAPIView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = FoodSerializer
+    serializer_class = AddFoodSerializer
     queryset = Food.objects.all()
 
     def get_object(self):
@@ -132,3 +144,90 @@ class DeleteFoodAPIView(generics.DestroyAPIView):
         food = self.get_object()
         food.delete()
         return Response({"message": "Food deleted successfully"}, status=status.HTTP_200_OK)
+
+class AdminFoodListAPIView(generics.ListAPIView):
+    serializer_class = AdminFoodListingSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'request_status': ['exact'],
+        'donor__username': ['exact', 'contains'],  
+        'created_at': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'expiration_date': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'foodType': ['exact'],
+    }
+    ordering_fields = ['created_at', 'expiration_date']
+    pagination_class = PageNumberPagination
+    
+    def get_queryset(self):
+        queryset = Food.objects.all()
+        
+        # Get filter parameters from query string
+        request_status = self.request.query_params.get('request_status')
+        food_type = self.request.query_params.get('food_type')
+        username = self.request.query_params.get('username')
+        role = self.request.query_params.get('role')
+        
+        # Apply filters if parameters are provided
+        if request_status:
+            queryset = queryset.filter(request_status=request_status)
+        
+        if username:
+            queryset = queryset.filter(donor__username=username)
+            
+        if role:
+            queryset = queryset.filter(donor__userprofile__role=role)
+
+        if food_type:
+            queryset = queryset.filter(foodType=food_type)
+        
+        return queryset
+
+class AdminDonationListAPIView(generics.ListAPIView):
+    serializer_class = AdminDonationListingSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    
+    filterset_fields = {
+        'is_claimed': ['exact'],  
+        'claimed_at': ['exact', 'gte', 'lte', 'gt', 'lt'],
+        'charity__username': ['exact', 'contains'],  
+        'food__name': ['exact', 'contains'],  
+        'food__donor__username': ['exact', 'contains'],  
+        'food__foodType': ['exact']
+    }
+    
+    search_fields = [
+        'charity__username',
+        'food__name',
+        'food__donor__username', 
+    ]
+
+    ordering_fields = ['claimed_at']
+    pagination_class = PageNumberPagination
+    
+    def get_queryset(self):
+        queryset = Donation.objects.all()
+        
+        is_claimed = self.request.query_params.get('is_claimed')
+        charity_username = self.request.query_params.get('charity_username')
+        donor_username = self.request.query_params.get('donor_username')
+        food_name = self.request.query_params.get('food_name')
+        food_type = self.request.query_params.get('food_type')
+
+        if is_claimed is not None:
+            queryset = queryset.filter(is_claimed=is_claimed)
+
+        if charity_username:
+            queryset = queryset.filter(charity__username=charity_username)
+        
+        if donor_username:
+            queryset = queryset.filter(food__donor__username=donor_username)
+        
+        if food_name:
+            queryset = queryset.filter(food__name__icontains=food_name)
+
+        if food_type:
+            queryset = queryset.filter(food__foodType__icontains=food_type)  # ✅ Corrected field reference
+
+        return queryset
