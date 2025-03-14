@@ -69,7 +69,7 @@ class FoodClaimSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Donation
-        fields = ["food", "charity"]
+        fields = ["food", "charity", "longitude", "latitude", "city", "country"]  # ✅ Added new fields
 
     def validate_food(self, value):
         """Ensure food is not already claimed."""

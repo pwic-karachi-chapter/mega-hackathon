@@ -62,9 +62,17 @@ class ClaimFoodAPIView(APIView):
     def post(self, request, food_id):
         food = get_object_or_404(Food, id=food_id, request_status='accepted')
 
-        serializer = FoodClaimSerializer(data={"food": food.id}, context={"request": request})
+        data = {
+            "food": food.id,
+            "longitude": request.data.get("longitude"),
+            "latitude": request.data.get("latitude"),
+            "city": request.data.get("city"),
+            "country": request.data.get("country"),
+        }
+
+        serializer = FoodClaimSerializer(data=data, context={"request": request})
         if serializer.is_valid():
-            donation = serializer.save()
+            donation = serializer.save(charity=request.user) 
             return Response({'message': 'Food claimed successfully', 'donation': FoodClaimSerializer(donation).data}, status=201)
 
         return Response(serializer.errors, status=400)
