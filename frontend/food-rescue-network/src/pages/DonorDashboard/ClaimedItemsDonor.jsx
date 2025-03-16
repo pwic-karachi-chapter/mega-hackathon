@@ -52,7 +52,7 @@ const ClaimedItemsDonor = () => {
                 className="bg-white shadow-md rounded-lg p-4 border"
               >
                 <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-sm text-gray-600">{item.foodType}</p>
+                <p className="text-sm"><strong>Food Type:</strong> {item.foodType}</p>
                 <p className="text-sm">
                   <strong>Quantity:</strong> {item.quantity} {item.unit}
                 </p>

@@ -109,11 +109,11 @@ const DonationsTable = () => {
           <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead className="bg-gray-200">
               <tr>
-                <th className="p-2">Food</th>
-                <th className="p-2">Type</th>
-                <th className="p-2">Charity</th>
-                <th className="p-2">Donor</th>
-                <th className="p-2">Claimed At</th>
+                <th className="p-2 text-left">Food</th>
+                <th className="p-2 text-left">Type</th>
+                <th className="p-2 text-left">Charity</th>
+                <th className="p-2 text-left">Donor</th>
+                <th className="p-2 text-left">Claimed At</th>
               </tr>
             </thead>
             <tbody>

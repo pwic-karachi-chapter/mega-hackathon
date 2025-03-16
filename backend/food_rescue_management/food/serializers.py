@@ -58,7 +58,7 @@ class FoodListingSerializer(serializers.ModelSerializer):
 
     def get_claimedBy(self, obj):
         donation = Donation.objects.filter(food=obj, is_claimed=True).first()
-        return donation.charity.username if donation else None
+        return donation.charity.first_name+" "+donation.charity.last_name if donation else None
 
     def get_claimedAt(self, obj):
         donation = Donation.objects.filter(food=obj, is_claimed=True).first()
@@ -119,7 +119,7 @@ class UnclaimedFoodListSerializer(serializers.ModelSerializer):
 
 
 class AdminFoodListingSerializer(serializers.ModelSerializer):
-    donor_name = serializers.CharField(source='donor.username', read_only=True)
+    donor_name = serializers.SerializerMethodField()
     donor_role = serializers.CharField(source='donor.userprofile.role', read_only=True)
 
     class Meta:
@@ -128,12 +128,22 @@ class AdminFoodListingSerializer(serializers.ModelSerializer):
                  'city', 'country', 'longitude', 'latitude', 'created_at', 
                  'request_status', 'image', 'donor', 'donor_name', 'donor_role']
 
+    def get_donor_name(self, obj):
+        return f"{obj.donor.first_name.capitalize()} {obj.donor.last_name.capitalize()}"
+
 class AdminDonationListingSerializer(serializers.ModelSerializer):
-    charity_name = serializers.CharField(source='charity.username', read_only=True)
+    charity_name = serializers.SerializerMethodField()
     food_name = serializers.CharField(source='food.name', read_only=True)
     food_type = serializers.CharField(source='food.foodType', read_only=True)
-    donor_name = serializers.CharField(source='food.donor.username', read_only=True)
+    donor_name = serializers.SerializerMethodField()
     image = serializers.ImageField(source='food.image', read_only=True)
+
     class Meta:
         model = Donation
         fields = ['id', 'food_name', 'food_type', 'charity_name', 'donor_name', 'image', 'is_claimed', 'claimed_at']
+
+    def get_charity_name(self, obj):
+        return f"{obj.charity.first_name.capitalize()} {obj.charity.last_name.capitalize()}"
+
+    def get_donor_name(self, obj):
+        return f"{obj.food.donor.first_name.capitalize()} {obj.food.donor.last_name.capitalize()}"

@@ -199,8 +199,12 @@ class AdminDonationListAPIView(generics.ListAPIView):
     
     search_fields = [
         'charity__username',
+        'charity__first_name',
+        'charity__last_name',
         'food__name',
-        'food__donor__username', 
+        'food__donor_username',
+        'food__donor__first_name',
+        'food__donor__last_name', 
     ]
 
     ordering_fields = ['claimed_at']

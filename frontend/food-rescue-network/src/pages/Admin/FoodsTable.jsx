@@ -8,6 +8,7 @@ const FoodsTable = () => {
     fetchFoods,
     fetchAcceptedFoods,
     fetchPendingFoods,
+    fetchRejectedFoods, // Add this line
     fetchAcceptedFoodsByUsername,
     fetchNewestFoods,
     fetchOldestFoods,
@@ -38,6 +39,8 @@ const FoodsTable = () => {
       fetchAcceptedFoods();
     } else if (filters.request_status === "pending") {
       fetchPendingFoods();
+    } else if (filters.request_status === "rejected") { // Add this condition
+      fetchRejectedFoods();
     } else if (filters.ordering === "created_at") {
       fetchOldestFoods();
     } else if (filters.ordering === "-created_at") {
@@ -90,6 +93,7 @@ const FoodsTable = () => {
           <option value="">All</option>
           <option value="accepted">Accepted</option>
           <option value="pending">Pending</option>
+          <option value="rejected">Rejected</option>
         </select>
         <select
           name="ordering"
@@ -119,13 +123,13 @@ const FoodsTable = () => {
           <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead className="bg-gray-200">
               <tr>
-                <th className="p-2">Name</th>
-                <th className="p-2">Type</th>
-                <th className="p-2">Quantity</th>
-                <th className="p-2">Expiration</th>
-                <th className="p-2">Donor</th>
-                <th className="p-2">Status</th>
-                <th className="p-2">Actions</th>
+                <th className="p-2 text-left">Name</th>
+                <th className="p-2 text-left">Type</th>
+                <th className="p-2 text-left">Quantity</th>
+                <th className="p-2 text-left">Expiration</th>
+                <th className="p-2 text-left">Donor</th>
+                <th className="p-2 text-left">Status</th>
+                <th className="p-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -170,7 +174,7 @@ const FoodsTable = () => {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-gray-500">No actions</span>
+                      <span className="text-gray-500">Already processed</span>
                     )}
                   </td>
                 </tr>

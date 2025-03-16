@@ -38,6 +38,19 @@ const useFoodStore = create((set) => ({
     }
   },
 
+  fetchRejectedFoods: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axiosInstance.get(
+        "/foods/?request_status=rejected"
+      );
+      set({ foods: response.data.results, loading: false });
+    } catch (error) {
+      console.error("Error fetching accepted foods:", error);
+      set({ error: "Failed to fetch accepted foods", loading: false });
+    }
+  },
+
   // 🔹 Fetch pending food requests
   fetchPendingFoods: async () => {
     set({ loading: true, error: null });
