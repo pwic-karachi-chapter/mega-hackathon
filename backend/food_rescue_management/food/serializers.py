@@ -2,6 +2,18 @@ from rest_framework import serializers
 from food.models import Food, Donation
 from authentication.models import CustomUser
 
+class FoodSerializer_ForbulkUpload(serializers.ModelSerializer):
+    class Meta:
+        model = Food
+        fields = '__all__'
+
+
+class DonationSerializer_ForbulkUpload(serializers.ModelSerializer):
+    class Meta:
+        model = Donation
+        fields = '__all__'
+
+
 class AddFoodSerializer(serializers.ModelSerializer):
     donor = serializers.HiddenField(default=serializers.CurrentUserDefault())
 

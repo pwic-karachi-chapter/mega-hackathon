@@ -1,0 +1,101 @@
+food_id,food_type,expiration_date,city,country,latitude,longitude,charity_id,charity_preference
+47,"('bakery', 'Bakery')",2025-04-06,Rachelbury,South Africa,87.578463,174.718576,18,Not Specified
+57,"('fruit', 'Fruit')",2025-04-08,Ericabury,Malawi,-46.2145075,-114.813991,34,Not Specified
+12,"('liquid', 'Liquid')",2025-03-30,Christinetown,Korea,-52.609734,22.994722,17,Not Specified
+26,"('vegetable', 'Vegetable')",2025-03-29,Lake Michaeltown,Nicaragua,31.385710,-23.242361,19,Not Specified
+79,"('snack', 'Snack')",2025-03-20,Clarkchester,Brunei Darussalam,-4.674329,104.506397,23,Not Specified
+93,"('fruit', 'Fruit')",2025-04-08,Michaelton,Sao Tome and Principe,-54.270728,-2.813114,37,Not Specified
+40,"('vegetable', 'Vegetable')",2025-03-17,New Georgechester,Lao People's Democratic Republic,87.291547,-157.637026,32,Not Specified
+49,"('meat', 'Meat')",2025-03-31,West Kimberlyland,Sao Tome and Principe,23.665566,-102.327883,17,Not Specified
+93,"('fruit', 'Fruit')",2025-04-08,Michaelton,Sao Tome and Principe,-54.270728,-2.813114,16,Not Specified
+70,"('meal', 'Meal')",2025-03-30,Port Suzannechester,French Polynesia,33.9695635,159.366157,13,Not Specified
+7,"('fruit', 'Fruit')",2025-04-09,Jonesview,Belize,-59.6448755,-46.529353,6,Not Specified
+96,"('bakery', 'Bakery')",2025-03-29,North Susanport,Colombia,15.4440625,125.929188,40,Not Specified
+54,"('meal', 'Meal')",2025-04-11,West Staceymouth,Spain,43.8437225,172.317396,16,Not Specified
+14,"('vegetable', 'Vegetable')",2025-03-30,Brownberg,Niger,-29.8037255,64.848619,11,Not Specified
+80,"('fruit', 'Fruit')",2025-04-07,South David,Comoros,6.395325,-87.484906,7,Not Specified
+45,"('meat', 'Meat')",2025-03-24,New Andrewberg,Colombia,66.960108,115.217088,38,Not Specified
+37,"('bakery', 'Bakery')",2025-04-06,North Chase,Guam,-17.372236,-45.613946,1,Not Specified
+14,"('vegetable', 'Vegetable')",2025-03-30,Brownberg,Niger,-29.8037255,64.848619,4,Not Specified
+31,"('bakery', 'Bakery')",2025-03-31,Heatherchester,Cambodia,35.9913685,23.377610,17,Not Specified
+89,"('bakery', 'Bakery')",2025-04-05,Mitchellbury,Tunisia,-23.699947,-50.469416,13,Not Specified
+57,"('fruit', 'Fruit')",2025-04-08,Ericabury,Malawi,-46.2145075,-114.813991,25,Not Specified
+66,"('meal', 'Meal')",2025-04-03,Whitechester,Lesotho,-45.434510,102.521672,20,Not Specified
+34,"('fruit', 'Fruit')",2025-03-27,Lake Austinmouth,Vietnam,-9.3584665,163.480494,33,Not Specified
+32,"('liquid', 'Liquid')",2025-04-08,Lake Erinport,Antarctica (the territory South of 60 deg S),87.8832695,25.625937,11,Not Specified
+24,"('snack', 'Snack')",2025-04-05,Amyburgh,Holy See (Vatican City State),54.0753005,-4.360974,13,Not Specified
+50,"('meal', 'Meal')",2025-03-28,Smithland,Azerbaijan,89.7773715,18.209940,19,Not Specified
+54,"('meal', 'Meal')",2025-04-11,West Staceymouth,Spain,43.8437225,172.317396,9,Not Specified
+26,"('vegetable', 'Vegetable')",2025-03-29,Lake Michaeltown,Nicaragua,31.385710,-23.242361,31,Not Specified
+25,"('meat', 'Meat')",2025-04-03,Lake Maurice,Tokelau,72.266811,162.967836,29,Not Specified
+51,"('liquid', 'Liquid')",2025-03-27,West Andrea,Belgium,30.1887515,-148.473250,10,Not Specified
+93,"('fruit', 'Fruit')",2025-04-08,Michaelton,Sao Tome and Principe,-54.270728,-2.813114,4,Not Specified
+84,"('snack', 'Snack')",2025-03-16,Kristinland,Seychelles,55.6105495,-61.623466,30,Not Specified
+47,"('bakery', 'Bakery')",2025-04-06,Rachelbury,South Africa,87.578463,174.718576,3,Not Specified
+65,"('liquid', 'Liquid')",2025-03-22,West Karenfurt,Denmark,60.804355,28.669950,13,Not Specified
+68,"('dairy', 'Dairy')",2025-03-26,Erikamouth,Saint Martin,-82.0123195,-85.166645,26,Not Specified
+85,"('liquid', 'Liquid')",2025-04-11,Port Kathrynmouth,Bermuda,-43.1271145,-154.079157,9,Not Specified
+9,"('meal', 'Meal')",2025-04-02,New Rachel,Poland,-44.003476,81.445166,23,Not Specified
+18,"('meal', 'Meal')",2025-03-26,New Jeffreymouth,Solomon Islands,15.922193,-178.292356,28,Not Specified
+26,"('vegetable', 'Vegetable')",2025-03-29,Lake Michaeltown,Nicaragua,31.385710,-23.242361,36,Not Specified
+12,"('liquid', 'Liquid')",2025-03-30,Christinetown,Korea,-52.609734,22.994722,30,Not Specified
+75,"('fruit', 'Fruit')",2025-04-05,South Maryborough,Niue,85.4957295,-52.935323,27,Not Specified
+57,"('fruit', 'Fruit')",2025-04-08,Ericabury,Malawi,-46.2145075,-114.813991,4,Not Specified
+94,"('meat', 'Meat')",2025-03-27,East Katiehaven,Haiti,8.7065045,144.497527,21,Not Specified
+17,"('vegetable', 'Vegetable')",2025-03-19,Brandiville,Belize,-58.5672005,157.608670,39,Not Specified
+96,"('bakery', 'Bakery')",2025-03-29,North Susanport,Colombia,15.4440625,125.929188,11,Not Specified
+87,"('dairy', 'Dairy')",2025-04-09,New Jeremy,Uzbekistan,71.897022,-7.395776,35,Not Specified
+32,"('liquid', 'Liquid')",2025-04-08,Lake Erinport,Antarctica (the territory South of 60 deg S),87.8832695,25.625937,29,Not Specified
+48,"('snack', 'Snack')",2025-04-11,Lake Taylorborough,India,-46.907045,-18.279466,38,Not Specified
+75,"('fruit', 'Fruit')",2025-04-05,South Maryborough,Niue,85.4957295,-52.935323,39,Not Specified
+61,"('meal', 'Meal')",2025-04-10,Jeffreyfurt,French Southern Territories,15.912261,-143.265912,16,Not Specified
+80,"('fruit', 'Fruit')",2025-04-07,South David,Comoros,6.395325,-87.484906,25,Not Specified
+77,"('meat', 'Meat')",2025-03-21,Gonzalezport,Reunion,-62.7707605,-20.371147,12,Not Specified
+40,"('vegetable', 'Vegetable')",2025-03-17,New Georgechester,Lao People's Democratic Republic,87.291547,-157.637026,34,Not Specified
+68,"('dairy', 'Dairy')",2025-03-26,Erikamouth,Saint Martin,-82.0123195,-85.166645,39,Not Specified
+12,"('liquid', 'Liquid')",2025-03-30,Christinetown,Korea,-52.609734,22.994722,7,Not Specified
+4,"('vegetable', 'Vegetable')",2025-04-05,South Kaitlyn,Niger,24.8861345,6.546045,3,Not Specified
+43,"('fruit', 'Fruit')",2025-04-11,Port Michael,Lebanon,29.640295,8.138406,35,Not Specified
+28,"('vegetable', 'Vegetable')",2025-03-17,North Jonathan,Mexico,-73.739349,-156.163671,1,Not Specified
+67,"('bakery', 'Bakery')",2025-03-28,Susanport,Brazil,16.966810,-53.420639,5,Not Specified
+2,"('meal', 'Meal')",2025-03-30,West Ericburgh,Japan,11.933271,114.282640,28,Not Specified
+62,"('meal', 'Meal')",2025-04-04,New Thomas,Greenland,45.4146845,-173.464070,9,Not Specified
+69,"('meat', 'Meat')",2025-03-18,Andreaview,Canada,72.520939,-54.995386,25,Not Specified
+20,"('snack', 'Snack')",2025-03-17,Ayalafort,Antarctica (the territory South of 60 deg S),-47.3642045,154.478024,35,Not Specified
+8,"('meat', 'Meat')",2025-04-04,Gonzalezshire,Albania,9.697690,-37.941181,1,Not Specified
+20,"('snack', 'Snack')",2025-03-17,Ayalafort,Antarctica (the territory South of 60 deg S),-47.3642045,154.478024,21,Not Specified
+86,"('fruit', 'Fruit')",2025-03-31,Donnabury,Fiji,-12.769752,164.780290,23,Not Specified
+36,"('meal', 'Meal')",2025-04-08,Amymouth,Andorra,69.6416195,-76.584219,39,Not Specified
+75,"('fruit', 'Fruit')",2025-04-05,South Maryborough,Niue,85.4957295,-52.935323,18,Not Specified
+46,"('vegetable', 'Vegetable')",2025-04-13,Barbaraport,North Macedonia,74.560196,-35.108359,14,Not Specified
+6,"('dairy', 'Dairy')",2025-04-03,Christopherstad,Sierra Leone,-73.0456205,-66.274082,26,Not Specified
+16,"('liquid', 'Liquid')",2025-04-10,Lake Scottview,Netherlands Antilles,7.443082,124.396055,18,Not Specified
+18,"('meal', 'Meal')",2025-03-26,New Jeffreymouth,Solomon Islands,15.922193,-178.292356,26,Not Specified
+49,"('meat', 'Meat')",2025-03-31,West Kimberlyland,Sao Tome and Principe,23.665566,-102.327883,5,Not Specified
+57,"('fruit', 'Fruit')",2025-04-08,Ericabury,Malawi,-46.2145075,-114.813991,17,Not Specified
+82,"('snack', 'Snack')",2025-03-20,West Stevenville,Belize,-39.0625445,-104.876762,32,Not Specified
+38,"('fruit', 'Fruit')",2025-04-01,Port Joseph,Jordan,-70.4536295,-162.500395,6,Not Specified
+47,"('bakery', 'Bakery')",2025-04-06,Rachelbury,South Africa,87.578463,174.718576,4,Not Specified
+28,"('vegetable', 'Vegetable')",2025-03-17,North Jonathan,Mexico,-73.739349,-156.163671,6,Not Specified
+30,"('meal', 'Meal')",2025-04-10,Lake Kaylabury,Saudi Arabia,38.333309,79.223626,8,Not Specified
+64,"('snack', 'Snack')",2025-04-03,South Melissaburgh,Lesotho,49.8090735,-124.594893,38,Not Specified
+92,"('vegetable', 'Vegetable')",2025-03-21,Davismouth,Comoros,-21.096422,103.134102,21,Not Specified
+99,"('liquid', 'Liquid')",2025-03-22,South Evelynshire,Zimbabwe,18.3780055,-19.949448,25,Not Specified
+20,"('snack', 'Snack')",2025-03-17,Ayalafort,Antarctica (the territory South of 60 deg S),-47.3642045,154.478024,32,Not Specified
+90,"('meal', 'Meal')",2025-03-18,Andrewbury,Croatia,43.4935355,-104.371190,32,Not Specified
+54,"('meal', 'Meal')",2025-04-11,West Staceymouth,Spain,43.8437225,172.317396,20,Not Specified
+92,"('vegetable', 'Vegetable')",2025-03-21,Davismouth,Comoros,-21.096422,103.134102,5,Not Specified
+53,"('snack', 'Snack')",2025-03-28,Nicoleshire,Ireland,-56.4908245,133.743755,17,Not Specified
+34,"('fruit', 'Fruit')",2025-03-27,Lake Austinmouth,Vietnam,-9.3584665,163.480494,39,Not Specified
+41,"('meat', 'Meat')",2025-04-03,Rodriguezmouth,Eritrea,-15.171030,-51.050626,35,Not Specified
+5,"('vegetable', 'Vegetable')",2025-04-05,Willisburgh,Latvia,-43.1955015,143.838820,27,Not Specified
+67,"('bakery', 'Bakery')",2025-03-28,Susanport,Brazil,16.966810,-53.420639,6,Not Specified
+74,"('snack', 'Snack')",2025-04-02,Lake Chad,Switzerland,-54.581376,176.353821,31,Not Specified
+18,"('meal', 'Meal')",2025-03-26,New Jeffreymouth,Solomon Islands,15.922193,-178.292356,18,Not Specified
+45,"('meat', 'Meat')",2025-03-24,New Andrewberg,Colombia,66.960108,115.217088,24,Not Specified
+15,"('meat', 'Meat')",2025-03-17,Amyland,Serbia,-32.7323315,-105.136182,1,Not Specified
+7,"('fruit', 'Fruit')",2025-04-09,Jonesview,Belize,-59.6448755,-46.529353,15,Not Specified
+20,"('snack', 'Snack')",2025-03-17,Ayalafort,Antarctica (the territory South of 60 deg S),-47.3642045,154.478024,25,Not Specified
+2,"('meal', 'Meal')",2025-03-30,West Ericburgh,Japan,11.933271,114.282640,40,Not Specified
+75,"('fruit', 'Fruit')",2025-04-05,South Maryborough,Niue,85.4957295,-52.935323,7,Not Specified
+49,"('meat', 'Meat')",2025-03-31,West Kimberlyland,Sao Tome and Principe,23.665566,-102.327883,4,Not Specified

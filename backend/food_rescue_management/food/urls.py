@@ -1,7 +1,17 @@
-from django.urls import path
-from .views import AddFoodView, UpdateFoodStatusView, DonorFoodListView, ClaimFoodAPIView , ClaimedFoodListAPIView, CancelClaimAPIView, UnclaimedFoodListAPIView, EditFoodAPIView, DeleteFoodAPIView, AdminFoodListAPIView, AdminDonationListAPIView
+from django.urls import path, include
+from .views import RecommendationViewSet, DonationViewSet,FoodViewSet,AddFoodView, UpdateFoodStatusView, DonorFoodListView, ClaimFoodAPIView , ClaimedFoodListAPIView, CancelClaimAPIView, UnclaimedFoodListAPIView, EditFoodAPIView, DeleteFoodAPIView, AdminFoodListAPIView, AdminDonationListAPIView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'food', FoodViewSet, basename='food')
+router.register(r'donations', DonationViewSet) 
+router.register(r'recommendations', RecommendationViewSet, basename="recommendations")
 
 urlpatterns = [
+    path('', include(router.urls)),
+    path('donations/generate_fake_charities/', DonationViewSet.as_view({'post': 'generate_fake_charities'}), name='generate_fake_charities'),
+    path('recommendations/recommend_foods_for_charity/', RecommendationViewSet.as_view({'post': 'recommend_foods_for_charity'}), name='recommend_foods_for_charity'),
+    path('food/generate_fake_donations/', FoodViewSet.as_view({'post': 'generate_fake_donations'}), name='generate_fake_donations'),
     path('add-food/', AddFoodView.as_view(), name='add-food'), #donor will add the food
     path('update-food-status/<int:food_id>', UpdateFoodStatusView.as_view(), name='update-food-status'), #admin will update the food status
     path("donor-food-listing/", DonorFoodListView.as_view(), name="donor-food-listing"), #List the food added by donor
