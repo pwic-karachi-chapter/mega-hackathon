@@ -1,18 +1,58 @@
-from rest_framework import status, generics, filters
+import os
+import csv
+import io
+import random
+import joblib
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from rest_framework import status, generics, filters, viewsets
 from rest_framework.response import Response
+from faker import Faker
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView
-from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.views import APIView
-from .models import Food, Donation
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Food, Donation
 from authentication.models import CustomUser
-from .serializers import AddFoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
 
+from .serializers import DonationSerializer_ForbulkUpload,FoodSerializer_ForbulkUpload,AddFoodSerializer, FoodStatusUpdateSerializer, FoodListingSerializer, FoodClaimSerializer, ClaimedFoodSerializer, UnclaimedFoodListSerializer, AdminFoodListingSerializer, AdminDonationListingSerializer
+from django.contrib.auth import get_user_model
+from authentication.models import UserProfile
+
+User = get_user_model()
+
+
+fake = Faker()  # Initialize an instance of Faker
+FOOD_CHOICES = ["Pizza", "Burger", "Pasta", "Salad", "Soup", "Sandwich", "Rice", "Steak"]
+
+FOOD_TYPE_CHOICES = [
+        ('meal', 'Meal'),
+        ('fruit', 'Fruit'),
+        ('meat', 'Meat'),
+        ('bakery', 'Bakery'),
+        ('vegetable', 'Vegetable'),
+        ('dairy', 'Dairy'),
+        ('meal', 'Meal'),
+        ('snack', 'Snack'),
+        ('liquid', 'Liquid'),
+    ]
+REQUEST_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+UNIT_CHOICES = [
+        ('kg', 'Kg'),
+        ('box', 'Box'),
+        ('litre', 'Litre'),
+        ('dozen', 'Dozen'),
+    ]
 class AddFoodView(APIView):
     permission_classes = [IsAuthenticated] 
     parser_classes = [MultiPartParser, FormParser]
@@ -184,6 +224,7 @@ class AdminFoodListAPIView(generics.ListAPIView):
         return queryset
 
 class AdminDonationListAPIView(generics.ListAPIView):
+
     serializer_class = AdminDonationListingSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
@@ -235,3 +276,100 @@ class AdminDonationListAPIView(generics.ListAPIView):
             queryset = queryset.filter(food__foodType__icontains=food_type)  # ✅ Corrected field reference
 
         return queryset
+
+
+class FoodViewSet(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer_ForbulkUpload
+
+    @action(detail=False, methods=['post'])
+    def generate_fake_donations(self, request):
+        n = int(request.data.get("count", 100))
+        users = list(CustomUser.objects.all())
+        if not users:
+            return Response({"error": "No users found. Please create users first."}, status=400)
+        
+        donations = []
+        for _ in range(n):
+            donation = Food(
+                donor=random.choice(users),
+                name=random.choice(FOOD_CHOICES),  # Using a custom food list
+                foodType=random.choice(FOOD_TYPE_CHOICES),
+                quantity=random.randint(1, 50),
+                unit=random.choice(UNIT_CHOICES),
+                expiration_date=fake.future_date(),
+                city=fake.city(),
+                country=fake.country(),
+                longitude=str(fake.longitude()),
+                latitude=str(fake.latitude()),
+                request_status=random.choice(REQUEST_STATUS_CHOICES)
+            )
+            donations.append(donation)
+
+        Food.objects.bulk_create(donations)
+        return Response({"message": f"{n} donation records created successfully!"}, status=201)
+
+
+class DonationViewSet(viewsets.ModelViewSet):
+    queryset = Donation.objects.all()
+    serializer_class = DonationSerializer_ForbulkUpload
+
+    @action(detail=False, methods=['post'])
+    def generate_fake_charities(self, request):
+        n = int(request.data.get("count", 100))
+        charities = list(CustomUser.objects.all())  # Now it will work
+
+        if not charities:
+            return Response({"error": "No charities found. Please create charities first."}, status=400)
+
+        foods = list(Food.objects.all())
+        if not foods:
+            return Response({"error": "No food donations found. Please create food donations first."}, status=400)
+
+        donations = []
+        for _ in range(n):
+            donation = Donation(
+                food=random.choice(foods),
+                charity=random.choice(charities),
+                city=fake.city(),
+                country=fake.country(),
+                longitude=str(fake.longitude()),
+                latitude=str(fake.latitude()),
+                is_claimed=random.choice([True, False])
+            )
+            donations.append(donation)
+
+        Donation.objects.bulk_create(donations)
+        return Response({"message": f"{n} fake charity donation records created successfully!"}, status=201)
+
+def load_recommendation_model():
+    try:
+        return joblib.load("food/ml/recommendation_model.pkl")
+    except FileNotFoundError:
+        return {}
+
+class RecommendationViewSet(viewsets.ViewSet):
+
+    @action(detail=False, methods=['post'])
+    def recommend_foods_for_charity(self,request):
+        if request.method == "POST":
+            try:
+                data = json.loads(request.body)
+                charity_id = data.get("charity_id")
+
+                if not charity_id:
+                    return JsonResponse({"error": "Charity ID is required"}, status=400)
+
+                charity = UserProfile.objects.filter(id=charity_id).first()
+                preferred_food = charity.food_preference
+
+                recommended_foods = Food.objects.filter(foodType=preferred_food)
+
+                return JsonResponse({"recommended_foods": list(recommended_foods.values("id", "name", "foodType"))})
+        
+            except UserProfile.DoesNotExist:
+                return JsonResponse({"error": "Charity not found"}, status=404)
+            except json.JSONDecodeError:
+                return JsonResponse({"error": "Invalid JSON data"}, status=400)
+
+        return JsonResponse({"error": "Method not allowed"}, status=405)

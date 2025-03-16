@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 class Food(models.Model):
     REQUEST_STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -26,7 +28,8 @@ class Food(models.Model):
         ('litre', 'Litre'),
         ('dozen', 'Dozen'),
     ]
-    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='food')
+    
+    donor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='food')
     name = models.CharField(max_length=255)
     foodType = models.CharField(max_length=10, choices=FOOD_TYPE_CHOICES)
     quantity = models.IntegerField()
