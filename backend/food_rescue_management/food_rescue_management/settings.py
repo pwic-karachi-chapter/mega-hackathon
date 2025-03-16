@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'food',
     'django_cleanup',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
