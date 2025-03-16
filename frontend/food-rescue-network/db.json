@@ -1,0 +1,72 @@
+{
+  "foodItems": [
+    {
+      "id": "8dc7",
+      "donor": "BrightFarms",
+      "foodName": "Oranges",
+      "foodType": "Fruit",
+      "quantity": "10kg",
+      "city": "Karachi Division",
+      "country": "Pakistan",
+      "latitude": 24.9309,
+      "longitude": 67.1218,
+      "expirationDate": "2025-03-15",
+      "claimed": false,
+      "distance": "5"
+    },
+    {
+      "id": "e746",
+      "donor": "AlKhidmat Foundation",
+      "foodName": "Biryani",
+      "foodType": "Meat",
+      "quantity": "50kg",
+      "city": "Karachi Division",
+      "country": "Pakistan",
+      "latitude": 24.8265,
+      "longitude": 67.2079,
+      "expirationDate": "2025-03-08",
+      "claimed": false,
+      "distance": "13"
+    },
+    {
+      "id": "4d50",
+      "donor": "Share The Meal",
+      "foodName": "Chocolate Cakes",
+      "foodType": "Bakery",
+      "quantity": "30kg",
+      "city": "Karachi Division",
+      "country": "Pakistan",
+      "latitude": 24.8524231,
+      "longitude": 67.1797893,
+      "expirationDate": "2025-03-15",
+      "claimed": false,
+      "distance": "8"
+    },
+    {
+      "id": "59eb",
+      "donor": "Dastarkhwan",
+      "foodName": "Mixed Fruit",
+      "foodType": "Fruit",
+      "quantity": "50kg",
+      "city": "Karachi Division",
+      "country": "Pakistan",
+      "latitude": 24.8607,
+      "longitude": 67.0104,
+      "expirationDate": "2025-03-14",
+      "claimed": false,
+      "distance": "17"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "12345",
+      "message": "⚠️ Mango is predicted to expire on (2025-03-19)!",
+      "read": false
+    },
+    {
+      "id": "56544",
+      "message": "⚠️ Tamarind is predicted to expire on (2025-03-19)!",
+      "read": true
+    }
+  ]
+}
